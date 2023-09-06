@@ -17,7 +17,22 @@ export const SearchFormContainer = styled.form`
   }
   button {
     display: flex;
+    align-items: center;
     background: transparent;
     color: ${(props) => props.theme['green-500']};
+    gap: 0.75rem;
+    padding: 1rem;
+    font-weight: bold;
+    border: 1px solid ${(props) => props.theme['green-300']};
+    border-radius: 6px;
+    &:hover {
+      background: ${(props) => props.theme['green-500']};
+      border-color: ${(props) => props.theme['green-500']};
+      color: ${(props) => props.theme.white};
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+    }
   }
 `

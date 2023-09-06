@@ -3,9 +3,9 @@ import { SearchFormContainer } from './styles'
 export function SearchForm() {
   return (
     <SearchFormContainer>
-      <input type="text" name="" id="" />{' '}
+      <input type="text" placeholder="Busque uma transação" name="" id="" />{' '}
       <button type="submit">
-        <MagnifyingGlass size={32} color="#00B37E" />
+        <MagnifyingGlass size={20} />
         Buscar
       </button>
     </SearchFormContainer>
