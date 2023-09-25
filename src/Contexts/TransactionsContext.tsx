@@ -1,6 +1,18 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { createContext } from 'use-context-selector'
 import { api } from '../lib/axios'
+/*
+Por que um componente renderiza?
+- Hooks changed (mudou estado,contexto,reduver)
+- Props chaged (mudou propriedade)
+- Parent rerendered (compoenente pai renderizou)
+
+
+Qual o fluxo de renderização
+1- O react recria HTML da interace da aquele componente
+2- Compara a versao do HTML recriada com a versão anterior
+3- SE mudou alguma coisa, ele reeescreve o HTML na tela
+*/
 
 interface Transactions {
   id: number
@@ -30,18 +42,21 @@ export function TransactionContextProvider({
   children,
 }: TransacionProviderProps) {
   const [transactions, setTransactions] = useState<Transactions[]>([])
-  async function createTransaction(data: CreateTransactionInput) {
-    const { description, price, category, type } = data
-    const response = await api.post('transactions', {
-      description,
-      price,
-      category,
-      type,
-      createdAt: new Date(),
-    })
-    setTransactions((state) => [response.data, ...state])
-  }
-  async function fetchTransactions(query?: string) {
+  const createTransaction = useCallback(
+    async (data: CreateTransactionInput) => {
+      const { description, price, category, type } = data
+      const response = await api.post('transactions', {
+        description,
+        price,
+        category,
+        type,
+        createdAt: new Date(),
+      })
+      setTransactions((state) => [response.data, ...state])
+    },
+    [],
+  )
+  const fetchTransactions = useCallback(async (query?: string) => {
     const response = await api.get('transactions', {
       params: {
         _sort: 'createdAt',
@@ -51,10 +66,10 @@ export function TransactionContextProvider({
     })
 
     setTransactions(response.data)
-  }
+  }, [])
   useEffect(() => {
     fetchTransactions()
-  }, [])
+  }, [fetchTransactions])
   return (
     <TransactionsContext.Provider
       value={{ transactions, fetchTransactions, createTransaction }}
